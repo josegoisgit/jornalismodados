@@ -1,3 +1,37 @@
-html{
-    background-color:aquamarine;
+html {
+    background-color: antiquewhite;
+    background-color: aquamarine;
+    height: 100%;
+    width: 100vw;
+    padding: 0;
+    margin: 0;
+}
+
+div {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    height: 50%;
+    padding: 0;
+    margin: 0;
+}
+
+#menu {
+    height: 5%;
+}
+
+#body {
+    height: 90%;
+    background-color: white;
+}
+
+#mapid {
+    height: 100%;
+}
+
+#foot {
+    height: 5%;
+    background-color: yellowgreen;
 }
