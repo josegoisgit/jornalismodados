@@ -17,6 +17,7 @@
         var center = ufrn;
         var zoom = 16;
         var mymap = L.map('mapid').setView(center, zoom);
+        var token = 'pk.eyJ1Ijoiam9zZWdvaXMiLCJhIjoiY2toYzM0ZmRkMDJvbjJ5dDM0ZTY4b3E0aiJ9.Y - gPTroCkKE3kpXg5dN3Xg';
 
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -24,7 +25,7 @@
             id: 'mapbox/streets-v11',
             tileSize: 512,
             zoomOffset: -1,
-            accessToken: 'pk.eyJ1Ijoiam9zZWdvaXMiLCJhIjoiY2toYzM4NDB0MDFsdDJwbzVpNWFsOGp5MyJ9.K11YYxkFRXAzrdA2XzYboA'
+            accessToken: 'pk.eyJ1Ijoiam9zZWdvaXMiLCJhIjoiY2toYzM0ZmRkMDJvbjJ5dDM0ZTY4b3E0aiJ9.Y-gPTroCkKE3kpXg5dN3Xg'
         }).addTo(mymap);
 
         var popup = L.popup();
