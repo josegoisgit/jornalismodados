@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Map</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap&libraries=&v=weekly"
+            defer></script>
+    <style type="text/css">
+        /* Always set the map height explicitly to define the size of the div
+        * element that contains the map. */
+        #map {
+            height: 100%;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script>
+        let map;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: -34.397, lng: 150.644 },
+                zoom: 8,
+            });
+        }
+    </script>
+    <link rel="stylesheet" href="css/zero.css" />
+
+</head>
+<body>
+    <div id="div-menu">
+        <a href="./index.html"> <h1 id="nav-title"> Jornalismo de dados </h1> </a>
+        <a class="nav-menu" href="./maps.html"> Maps </a>
+        <a class="nav-menu" href="./maps_google.html"> Google </a>
+        <a class="nav-menu" href="./maps_mapbox.html"> Mapbox </a>
+        <a class="nav-menu" href="./maps_leaflet.html"> Leaflet </a>
+        <a class="nav-menu" href="./databases.html"> Databases </a>
+        <a class="nav-menu" href="./about.html"> About </a>
+    </div>
+    <div id="map"></div>
+</body>
+</html>

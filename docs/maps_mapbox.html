@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+          integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+          crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+            integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+            crossorigin=""></script>
+    <link rel="stylesheet" href="css/zero.css" />
+    <script src='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v1.12.0/mapbox-gl.css' rel='stylesheet' />
+    <script>
+        var london = [51.505, -0.09];
+        var ufrn = [-5.838, -35.203];
+        var center = ufrn;
+        var zoom = 16;
+        var mymap = L.map('mapid').setView(center, zoom);
+        var token = 'pk.eyJ1Ijoiam9zZWdvaXMiLCJhIjoiY2toYzM0ZmRkMDJvbjJ5dDM0ZTY4b3E0aiJ9.Y - gPTroCkKE3kpXg5dN3Xg';
+
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1Ijoiam9zZWdvaXMiLCJhIjoiY2toYzM0ZmRkMDJvbjJ5dDM0ZTY4b3E0aiJ9.Y-gPTroCkKE3kpXg5dN3Xg'
+        }).addTo(mymap);
+
+        var popup = L.popup();
+
+        function onMapClick(e) {
+            popup
+                .setLatLng(e.latlng)
+                .setContent("You clicked the map at " + e.latlng.toString())
+                .openOn(mymap);
+        }
+
+        mymap.on('click', onMapClick);
+    </script>
+</head>
+<body>
+    <div id="div-menu">
+        <a href="./index.html"> <h1 id="nav-title"> Jornalismo de dados </h1> </a>
+        <a class="nav-menu" href="./maps.html"> Maps </a>
+        <a class="nav-menu" href="./maps_google.html"> Google </a>
+        <a class="nav-menu" href="./maps_mapbox.html"> Mapbox </a>
+        <a class="nav-menu" href="./maps_leaflet.html"> Leaflet </a>
+        <a class="nav-menu" href="./databases.html"> Databases </a>
+        <a class="nav-menu" href="./about.html"> About </a>
+    </div>
+    <div id='map'></div>
+    <script>
+        mapboxgl.accessToken = 'pk.eyJ1Ijoiam9zZWdvaXMiLCJhIjoiY2toYzM0ZmRkMDJvbjJ5dDM0ZTY4b3E0aiJ9.Y-gPTroCkKE3kpXg5dN3Xg';
+        var map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/streets-v11', // stylesheet location
+            center: [-74.5, 40], // starting position [lng, lat]
+            zoom: 9 // starting zoom
+        });
+    </script>
+
+    <div id="body">
+        <div id="mapid"></div>
+    </div>
+    <div id="foot">
+        Contact
+    </div>
+</body>
+</html>

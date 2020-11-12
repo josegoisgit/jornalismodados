@@ -1,3 +1,5 @@
+% need to do it manual: https://postos.anp.gov.br/
+
 dataset_url = 'https://dados.gov.br';
 
 last_page = 495;
@@ -239,6 +241,13 @@ for c = 1
     filename = fullfile(csv_dir(1).folder,csv_dir(1).name);
     temp_data = readtable(filename);
 end
+
+
+
+
+
+
+response = webwrite(url,PostName1,PostValue1,...,PostNameN,PostValueN)
 
 
 
