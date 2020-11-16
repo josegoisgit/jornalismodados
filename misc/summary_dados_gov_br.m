@@ -1,5 +1,5 @@
 % need to do it manual: https://postos.anp.gov.br/
-
+options  = weboptions('Timeout',60);
 dataset_url = 'https://dados.gov.br';
 
 last_page = 495;
@@ -12,7 +12,7 @@ while (page <= last_page)
 
     page_url = [dataset_url '/dataset?page=' num2str(page)];
     
-    dataset_tree = htmlTree(webread(page_url));
+    dataset_tree = htmlTree(webread(page_url,options));
     
     headings = dataset_tree.findElement('h3[class="dataset-heading"] > a');
     
@@ -20,7 +20,7 @@ while (page <= last_page)
         pagination = dataset_tree.findElement('div[class="pagination pagination-centered"] > ul > li > a');
         last_page   = str2double(pagination(end-1).extractHTMLText{1});
     end
-    
+     
     if isempty(datasets)
         datasets = cell(1,495*20);
     end
