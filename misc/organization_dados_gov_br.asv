@@ -1,0 +1,220 @@
+
+%%
+
+organizations_base_url = 'https://dados.gov.br/organization'
+
+web_options = weboptions;
+web_options.Timeout = 60;
+
+organizations_web = webread(organizations_base_url,web_options);
+organizations_tree = htmlTree(organizations_web);
+
+page = 1;
+max_page = 2;
+
+o = 0;
+organizations = struct();
+
+while (page < max_page)
+    organizations_web  = webread([organizations_base_url '?page=' num2str(page)],web_options)
+    organizations_tree = htmlTree(organizations_web);
+    organization_entry = organizations_tree.findElement('li[class="media-item"]');
+    
+    for e = 1 : length(organization_entry)
+        o = o + 1;
+        organization_entry(e)
+%        organization_entry(e).findElement('p')
+        organization_entry(e).findElement('h3').extractHTMLText
+        organizations(o).name  = char(organization_entry(e).findElement('IMG').getAttribute('alt'));
+        organizations(o).alias = char(organization_entry(e).findElement('h3').extractHTMLText);
+    
+        organizations(o).status = 0;
+    end
+    
+    if page == 1
+        pagination = organizations_tree.findElement('div[class="pagination pagination-centered"]');
+        pagination = pagination.findElement('a');
+        max_page   = str2double(pagination(end-1).extractHTMLText);
+    end
+    
+    page = page + 1;
+end
+%%
+
+% f1 = @(x) x.findElement('div[class="pagination pagination-centered"]');
+% pagination = @(x) (f1(x)).findElement('a');
+% get_max_page = @(x) str2double((pagination(x))(end-1).extractHTMLText);
+
+
+
+% save organizations organizations_base_url organizations
+
+%%
+clear all
+load organizations
+whos
+
+web_options = weboptions;
+web_options.Timeout = 360;
+
+%%
+clc
+d = 0;
+clear dados
+for o = 1 : length(organizations)
+    %%
+%     if organization(o).status == 1
+%         continue
+%     end
+%     
+    dd = 0;
+    page = 1;
+    max_page = 2;
+    while (page < max_page)
+        fprintf("%i/%i: %s",o,page,organizations(o).alias);
+        
+        fprintf("\tloading");
+        org_url = [organizations_base_url '/' organizations(o).name '?page=' num2str(page)];
+        fprintf(".");
+        org_web = webread(org_url,web_options);
+        fprintf(".");
+        org_tree = htmlTree(org_web);
+        fprintf(". done.\n");
+
+        if page == 1
+            pagination = org_tree.findElement('div[class="pagination pagination-centered"]');
+            if isempty(pagination)    
+                max_page   = 1;
+            else
+                pagination = pagination.findElement('a');
+                max_page   = str2double(pagination(end-1).extractHTMLText);
+            end
+        end
+        %%
+        
+        org_bd_lista = org_tree.findElement('ul[class="dataset-list unstyled"]');
+        
+        if isempty(org_bd_lista)
+            continue
+        end
+        
+        a_all        = org_bd_lista.findElement('a');
+        a_label      = org_bd_lista.findElement('a[class=label]');
+        a2s          = @(x) arrayfun(@(a) char(a.string), x, 'un',0);
+        a_bd         = a_all(~ismember(a2s(a_all),a2s(a_label)));
+
+        
+        for a = 1 : length(a_bd)
+            d = d + 1;
+            dd = dd + 1;
+            dado = struct;
+            
+            dado.id   = d;
+            dado.org  = o;
+            dado.href = char(a_bd(a).getAttribute('href'));
+%             dado
+            if ~exist('dados','var')
+                dados(1) = dado;
+            else
+                dados(end+1,1) = dado;
+            end
+            
+            fprintf("\t%i/%i\t%s\n",d,dd,dado.href)
+        end
+        
+        page = page + 1;
+        save dados dados
+    end
+    organization(o).status = 1;
+    
+end
+
+%%
+
+clear all
+load organizations.mat
+load dados.mat
+whos
+url_base = 'https://dados.gov.br';
+d = 1
+%%
+ 
+
+web_option = weboptions('Timeout',360);
+
+for d = 1 : length(dados)
+    %%
+   
+    furl = @(p) [url_base p dados(d).href];
+    clipboard('copy',furl(''))
+   
+    %%
+    
+    data_web = webread(furl(''), web_option);
+    data_tree = htmlTree(data_web);
+    
+    %%
+    
+    data_art = data_tree.findElement('article')
+    
+    data_alias = strtrim(char(data_art.findElement('h1').extractHTMLText));
+
+    data_desc = data_art.findElement('div[class="notes embedded-content"]');
+    
+    data_description = data_desc.findElement('p').extractHTMLText;
+    
+    data_tag = data_art.findElement('a[class="tag"]').extractHTMLText;
+    
+    if ~exist('tags','var')
+        tags = {};
+    end
+    
+    tags = unique([tags data_tag],'stable');
+    data_tag_id = arrayfun(@(a) find(strcmp(char(a),tags)),data_tag);
+    
+    dados(d).alias = data_alias;
+    dados(d).description = data_description;
+    dados(d).tag_id = data_tag_id;
+    
+    %%
+    data_info = data_art.findElement('tbody').findElement('tr');
+    
+    %%
+    clc
+    
+    info = struct();
+    for d = 1 : length(data_info)
+        %%
+       info_field = char(data_info(d).findElement('th').extractHTMLText);
+       info_field = lower(info_field);
+       info_field = rmdiacritc(info_field);
+       info_field = strrep(info_field,' ','_');
+       
+%        info_date = char(data_info(d).findElement('span').getAttribute('data-datetime'));
+       
+       info_value = strtrim(char(data_info(d).findElement('td').extractHTMLText));
+       
+       fprintf('%s: %s (%s)\n', info_field, info_value, info_date)
+       
+       info(d).(info_field) = info_value;
+    end
+    
+    
+    %%
+    
+    
+    
+    %%
+
+    group_web = webread(furl('groups/'), web_option);
+    group_tree = htmlTree(group_web);
+
+    
+    %%
+    
+    activity_web = webread(furl('activity/'), web_option);
+    activity_tree = htmlTree(activity_web);
+    
+    
+    
+end

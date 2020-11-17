@@ -250,3 +250,50 @@ for w = 1 : length(what_links)
     fprintf(fid,"%s\r\n",what_links{w});
 end
 fclose(fid);
+
+%%
+clc
+
+filenames = {}
+
+file_folder = 'C:\Users\José Gois\Google Drive\UFRN\Jornalismo de dados\data\tse';
+
+broken_file_link = {}
+done_file_link   = {}
+
+for f = 1 : length(file_links)
+
+    file_link = file_links{f};
+
+    is_http = strcmp(file_link(1:7),'http://') | strcmp(file_link(1:7),'https://');
+
+    if ~is_http
+        file_link = [base_url(8:end) '/' file_link];
+    end
+
+    [filepath,filename,fileext] = fileparts(strtrim(file_link(8:end)));
+
+    filepath = strsplit(filepath,'/');
+
+    filename = [filename fileext];
+   
+    filenames{f} = filename;
+    
+    try
+        websave(fullfile(file_folder,filename), file_link);
+        done_file_link{end+1,1} = file_link;
+    catch
+        broken_file_link{end+1,1} = file_link;
+    end
+    
+end
+
+%%
+
+
+
+
+
+
+
+

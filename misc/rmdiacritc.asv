@@ -1,0 +1,19 @@
+function new_str = rmdiacritc(old_str)
+    
+    new_str = old_str;
+    
+    for c = 1 : length(new_str)
+        switch lower(new_str(c))
+            case {'ü','ú','ù','û'}
+                new_str(c) = 'u';
+            case {''é','è','ê'}
+                new_str(c) = 'e';
+            case {'á','à'}
+                new_str(c) = 'a';
+            case {'á','à'}
+                new_str(c) = 'o';
+            case {'á','à'}
+                new_str(c) = 'i';
+        end
+    end
+end
